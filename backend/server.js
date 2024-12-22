@@ -66,6 +66,48 @@ createIndexIfNotExists();
 // Import Restaurant Model
 const Restaurant = require('./models/Restaurant');
 
+// Search restaurants by name or category using Elasticsearch
+app.get('/search', async (req, res) => {
+    const { query } = req.query;
+
+    try {
+        const result = await esClient.search({
+            index: 'restaurants',
+            body: {
+                query: {
+                    bool: {
+                        should: [
+                            {
+                                match: {
+                                    name: {
+                                        query,
+                                        fuzziness: 'AUTO',
+                                    },
+                                },
+                            },
+                            {
+                                match: {
+                                    category: {
+                                        query,
+                                        fuzziness: 'AUTO',
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                },
+            },
+        });
+
+        res.json(result.hits.hits.map((hit) => ({
+            _id: hit._id,
+            ...hit._source,
+        })));
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 // Endpoints
 // GET, POST, PUT, DELETE with Elasticsearch indexing
 
@@ -92,6 +134,7 @@ app.get('/restaurants/:id', async (req, res) => {
     }
 });
 
+// Add a new restaurant
 app.post('/restaurants', async (req, res) => {
     try {
         const newRestaurant = new Restaurant(req.body);
@@ -120,7 +163,7 @@ app.post('/restaurants', async (req, res) => {
     }
 });
 
-
+// Change restaurant details by ID
 app.put('/restaurants/:id', async (req, res) => {
     try {
         const updatedRestaurant = await Restaurant.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -145,7 +188,7 @@ app.put('/restaurants/:id', async (req, res) => {
     }
 });
 
-
+// DELETE a restaurant by ID
 app.delete('/restaurants/:id', async (req, res) => {
     try {
         const deletedRestaurant = await Restaurant.findByIdAndDelete(req.params.id);
@@ -169,7 +212,6 @@ app.delete('/restaurants/:id', async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
-
 
 // Start the server
 app.listen(PORT, () => {
