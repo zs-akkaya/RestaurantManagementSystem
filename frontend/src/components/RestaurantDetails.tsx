@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 interface Restaurant {
     name: string;
     category: string;
     address: string;
     phone: string;
-    photo?: string;
-    details?: string;
+    photo?: string; // Optional
+    details?: string; // Optional
 }
 
 const RestaurantDetails: React.FC = () => {
     const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
     const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
 
-    // Fetch a restaurant details with the specific restaurant ID
     useEffect(() => {
         const fetchRestaurantDetails = async () => {
             try {
@@ -45,6 +45,7 @@ const RestaurantDetails: React.FC = () => {
             <p>Phone: {restaurant.phone}</p>
             {restaurant.photo && <img src={restaurant.photo} alt={restaurant.name} style={{ width: '300px' }} />}
             {restaurant.details && <p>Details: {restaurant.details}</p>}
+            <button onClick={() => navigate(`/edit/${id}`)}>Edit Details</button>
         </div>
     );
 };
