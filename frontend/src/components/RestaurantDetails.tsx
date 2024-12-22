@@ -33,6 +33,27 @@ const RestaurantDetails: React.FC = () => {
         fetchRestaurantDetails();
     }, [id]);
 
+    const handleDelete = async () => {
+        const confirmDelete = window.confirm('Are you sure you want to delete this restaurant?');
+        if (confirmDelete) {
+            try {
+                const response = await fetch(`http://localhost:5001/restaurants/${id}`, {
+                    method: 'DELETE',
+                });
+
+                if (response.ok) {
+                    alert('Restaurant deleted successfully!');
+                    navigate('/'); // Navigate to the homepage after deletion
+                } else {
+                    alert('Failed to delete restaurant');
+                }
+            } catch (error) {
+                console.error('Error deleting restaurant:', error);
+                alert('An error occurred while deleting the restaurant');
+            }
+        }
+    };
+
     if (!restaurant) {
         return <p>Loading...</p>;
     }
@@ -46,6 +67,7 @@ const RestaurantDetails: React.FC = () => {
             {restaurant.photo && <img src={restaurant.photo} alt={restaurant.name} style={{ width: '300px' }} />}
             {restaurant.details && <p>Details: {restaurant.details}</p>}
             <button onClick={() => navigate(`/edit/${id}`)}>Edit Details</button>
+            <button onClick={handleDelete} style={{ color: 'red' }}>Delete Restaurant</button>
         </div>
     );
 };
