@@ -6,11 +6,14 @@ const RestaurantForm: React.FC = () => {
 
     const [formData, setFormData] = useState({
         name: '',
-        address: '',
         category: '',
+        address: '',
+        phone: '',
+        photo: '',
+        details: '',
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
@@ -54,6 +57,16 @@ const RestaurantForm: React.FC = () => {
                     />
                 </div>
                 <div>
+                    <label>Category:</label>
+                    <input
+                        type="text"
+                        name="category"
+                        value={formData.category}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div>
                     <label>Address:</label>
                     <input
                         type="text"
@@ -64,13 +77,30 @@ const RestaurantForm: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <label>Category:</label>
+                    <label>Phone Number:</label>
                     <input
                         type="text"
-                        name="category"
-                        value={formData.category}
+                        name="phone"
+                        value={formData.phone}
                         onChange={handleChange}
                         required
+                    />
+                </div>
+                <div>
+                    <label>Photo URL:</label>
+                    <input
+                        type="text"
+                        name="photo"
+                        value={formData.photo}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div>
+                    <label>Details:</label>
+                    <textarea
+                        name="details"
+                        value={formData.details}
+                        onChange={handleChange}
                     />
                 </div>
                 <button type="submit">Add</button>

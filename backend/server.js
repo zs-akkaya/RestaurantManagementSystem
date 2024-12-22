@@ -34,6 +34,19 @@ app.get('/restaurants', async (req, res) => {
     }
 });
 
+// GET /restaurants/:id - Get a specific restaurant by ID
+app.get('/restaurants/:id', async (req, res) => {
+    try {
+        const restaurant = await Restaurant.findById(req.params.id);
+        if (!restaurant) {
+            return res.status(404).json({ message: 'Restaurant not found' });
+        }
+        res.json(restaurant);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 // POST /restaurants - Add a new restaurant
 app.post('/restaurants', async (req, res) => {
     try {

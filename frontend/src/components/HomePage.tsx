@@ -4,15 +4,15 @@ import { useNavigate } from 'react-router-dom';
 interface Restaurant {
     _id: string;
     name: string;
-    address: string;
     category: string;
+    photo?: string; // Optional
 }
 
 const HomePage: React.FC = () => {
     const navigate = useNavigate();
     const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
 
-    // Fetch all restaurants from the backend to show them on homepage
+    // Fetch all restaurants from the backend to show them on the homepage
     useEffect(() => {
         const fetchRestaurants = async () => {
             try {
@@ -35,6 +35,10 @@ const HomePage: React.FC = () => {
         navigate('/add');
     };
 
+    const handleViewDetails = (id: string) => {
+        navigate(`/details/${id}`);
+    };
+
     return (
         <div>
             <h1>Welcome to the Restaurant Management System!</h1>
@@ -45,8 +49,9 @@ const HomePage: React.FC = () => {
                     {restaurants.map((restaurant) => (
                         <li key={restaurant._id}>
                             <h3>{restaurant.name}</h3>
-                            <p>Address: {restaurant.address}</p>
                             <p>Category: {restaurant.category}</p>
+                            {restaurant.photo && <img src={restaurant.photo} alt={restaurant.name} style={{ width: '200px' }} />}
+                            <button onClick={() => handleViewDetails(restaurant._id)}>Show Details</button>
                         </li>
                     ))}
                 </ul>
