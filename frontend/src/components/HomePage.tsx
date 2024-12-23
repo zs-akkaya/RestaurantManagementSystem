@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './HomePage.css';
 
 interface Restaurant {
     _id: string;
@@ -12,6 +13,7 @@ const HomePage: React.FC = () => {
     const navigate = useNavigate();
     const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>(''); // Search query for Elasticsearch
+    const [showWelcomeText, setShowWelcomeText] = useState<boolean>(true); // Control welcome text visibility
 
     const handleAddRestaurant = () => {
         navigate('/add');
@@ -21,12 +23,11 @@ const HomePage: React.FC = () => {
         navigate(`/details/${id}`);
     };
 
-    // Fetch all the restaurants
     const fetchRestaurants = async () => {
         try {
             const endpoint = searchQuery
-                ? `http://localhost:5001/search?query=${searchQuery}` // use searchQuery if exists
-                : 'http://localhost:5001/restaurants'; // Fetch all of the restaurants if no search query
+                ? `http://localhost:5001/search?query=${searchQuery}` // Use searchQuery if exists
+                : 'http://localhost:5001/restaurants'; // Fetch all restaurants if no search query
             const response = await fetch(endpoint);
             if (response.ok) {
                 const data = await response.json();
@@ -39,12 +40,10 @@ const HomePage: React.FC = () => {
         }
     };
 
-    // Fetch restaurants on initial load and also whenever the search query changes
     useEffect(() => {
         fetchRestaurants();
     }, [searchQuery]);
 
-    // Autocomplete suggestions when searching for a restaurant
     const fetchSuggestions = async (query: string) => {
         try {
             const response = await fetch(`http://localhost:5001/autocomplete?query=${query}`);
@@ -61,7 +60,6 @@ const HomePage: React.FC = () => {
         }
     };
 
-    // Searching for a restaurant by name or category
     const [suggestions, setSuggestions] = useState<string[]>([]);
 
     const handleSearchChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,15 +76,30 @@ const HomePage: React.FC = () => {
 
     return (
         <div>
+            <button id="add-btn" onClick={handleAddRestaurant}>
+                Add a New Restaurant
+            </button>
             <h1>Welcome to the Restaurant Management System!</h1>
-            <button onClick={handleAddRestaurant}>Add a New Restaurant</button>
-            <h2>Restaurant List</h2>
+
+            {showWelcomeText && (
+                <div id="welcome-banner">
+                    <p>
+                        Welcome to the Restaurant Management System!<br></br>
+                        Start by adding a new restaurant using the button at the top-right. You can edit or delete restaurants afterward. Click on a restaurant card to view its details. You can also filter and search restaurants by their names or categories.
+                    </p>
+                    <button onClick={() => setShowWelcomeText(false)}>X</button>
+                </div>
+            )}
+
+            {/* Search restaurants */}
             <input
+                id="search-input"
                 type="text"
-                placeholder="Search a restaurant by name or category"
+                placeholder="Search restaurants by name or category"
                 value={searchQuery}
                 onChange={handleSearchChange}
             />
+
             {/* Autocomplete suggestions */}
             {suggestions.length > 0 && (
                 <ul>
@@ -99,18 +112,25 @@ const HomePage: React.FC = () => {
             )}
 
             {restaurants.length > 0 ? (
-                <ul>
+                <ul id="restaurant-cards">
                     {restaurants.map((restaurant) => (
-                        <li key={restaurant._id}>
-                            <h3>{restaurant.name}</h3>
-                            <p>Category: {restaurant.category}</p>
-                            {restaurant.photo && <img src={restaurant.photo} alt={restaurant.name} style={{ width: '200px' }} />}
-                            <button onClick={() => handleViewDetails(restaurant._id)}>Show Details</button>
-                        </li>
+                        <div id="restaurant-card" onClick={() => handleViewDetails(restaurant._id)} key={restaurant._id}>
+                            <li>
+                                <h3>{restaurant.name}</h3>
+                                <p>{restaurant.category}</p>
+                                {restaurant.photo && (
+                                    <img
+                                        id="restaurant-card-img"
+                                        src={restaurant.photo}
+                                        alt={restaurant.name}
+                                    />
+                                )}
+                            </li>
+                        </div>
                     ))}
                 </ul>
             ) : (
-                <p>No restaurants available.</p>
+                <p id='no-restaurants'>No restaurants available. Click to top-right to start.</p>
             )}
         </div>
     );

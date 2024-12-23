@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import './RestaurantForm.css';
 
 const EditRestaurant: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -48,8 +49,7 @@ const EditRestaurant: React.FC = () => {
 
             if (response.ok) {
                 alert('Restaurant details updated successfully!');
-                // Back to the homepage
-                navigate(`/`);
+                navigate(`/details/${id}`); // Navigate back to the details page
             } else {
                 alert('Failed to update restaurant details');
             }
@@ -59,12 +59,17 @@ const EditRestaurant: React.FC = () => {
         }
     };
 
+    const handleBackToDetailsPage = () => {
+        navigate(`/details/${id}`); // Go back to the restaurant details page
+    };
+
     return (
         <div>
+            <button id='details-btn' onClick={handleBackToDetailsPage}>Go Back to Details Page</button>
             <h1>Edit Restaurant Details</h1>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} id='restaurant-form'>
                 <div>
-                    <label>Name:</label>
+                    <label>Name</label>
                     <input
                         type="text"
                         name="name"
@@ -74,7 +79,7 @@ const EditRestaurant: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <label>Category:</label>
+                    <label>Category</label>
                     <input
                         type="text"
                         name="category"
@@ -84,7 +89,7 @@ const EditRestaurant: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <label>Address:</label>
+                    <label>Address</label>
                     <input
                         type="text"
                         name="address"
@@ -94,7 +99,7 @@ const EditRestaurant: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <label>Phone:</label>
+                    <label>Phone</label>
                     <input
                         type="tel"
                         name="phone"
@@ -104,7 +109,7 @@ const EditRestaurant: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <label>Photo URL:</label>
+                    <label>Photo URL</label>
                     <input
                         type="url"
                         name="photo"
@@ -113,14 +118,14 @@ const EditRestaurant: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <label>Details:</label>
+                    <label>Details</label>
                     <textarea
                         name="details"
                         value={formData.details}
                         onChange={handleChange}
                     />
                 </div>
-                <button type="submit">Update</button>
+                <button id='submit-btn' type="submit">Update</button>
             </form>
         </div>
     );

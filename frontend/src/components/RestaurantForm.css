@@ -1,0 +1,73 @@
+#home-btn,
+#details-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 7px 12px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    background-color: lightblue;
+}
+
+#home-btn:hover,
+#details-btn:hover {
+    cursor: pointer;
+    background-color: rgba(173, 216, 230, 0.5);
+}
+
+#restaurant-form>div {
+    display: block;
+    width: 100%;
+    max-width: 425px;
+    margin: 30px auto 0;
+    text-align: center;
+}
+
+#restaurant-form input,
+#restaurant-form textarea {
+    display: block;
+    margin: 4px auto 0;
+    text-align: center;
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.35);
+    border-radius: 3px;
+}
+
+#restaurant-form input {
+    height: 23px;
+}
+
+#restaurant-form textarea {
+    height: 80px;
+}
+
+#restaurant-form label {
+    font-size: 1.1rem;
+}
+
+.red-text {
+    color: red;
+}
+
+#submit-btn {
+    display: block;
+    margin: 30px auto;
+    width: 150px;
+    min-width: 150px;
+    max-width: 150px;
+    padding: 7px 12px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    background-color: lightblue;
+}
+
+#submit-btn:hover {
+    cursor: pointer;
+    background-color: rgba(173, 216, 230, 0.5);
+}
+
+@media only screen and (max-width: 500px) {
+    #restaurant-form>div {
+        width: 80%;
+    }
+}

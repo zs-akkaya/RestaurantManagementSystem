@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './RestaurantForm.css';
 
 const MAX_NAME_LENGTH = 60;
 const MAX_CATEGORY_LENGTH = 30;
@@ -68,12 +69,17 @@ const RestaurantForm: React.FC = () => {
         }
     };
 
+    const handleBackToHomepage = () => {
+        navigate('/');
+    };
+
     return (
         <div>
+            <button id='home-btn' onClick={handleBackToHomepage}>Go Back to Homepage</button>
             <h1>Add a New Restaurant</h1>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} id='restaurant-form'>
                 <div>
-                    <label>Name (max {MAX_NAME_LENGTH} characters):</label>
+                    <label>Name <span className="small italic">(max {MAX_NAME_LENGTH} characters)</span> <span className='red-text'>*</span></label>
                     <input
                         type="text"
                         name="name"
@@ -84,7 +90,7 @@ const RestaurantForm: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <label>Category (max {MAX_CATEGORY_LENGTH} characters):</label>
+                    <label>Category <span className="small italic">(max {MAX_CATEGORY_LENGTH} characters)</span> <span className='red-text'>*</span></label>
                     <input
                         type="text"
                         name="category"
@@ -95,7 +101,7 @@ const RestaurantForm: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <label>Address:</label>
+                    <label>Address <span className='red-text'>*</span></label>
                     <input
                         type="text"
                         name="address"
@@ -105,7 +111,7 @@ const RestaurantForm: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <label>Phone Number (e.g., +90 212 123 12 34):</label>
+                    <label>Phone Number <span className="small italic">(e.g., +90 212 123 12 34)</span> <span className='red-text'>*</span></label>
                     <input
                         type="tel"
                         name="phone"
@@ -115,7 +121,7 @@ const RestaurantForm: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <label>Photo URL:</label>
+                    <label>Photo URL</label>
                     <input
                         type="url"
                         name="photo"
@@ -124,16 +130,15 @@ const RestaurantForm: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <label>Details (max {MAX_DETAILS_LENGTH} characters):</label>
+                    <label>Details <span className="small italic">(max {MAX_DETAILS_LENGTH} characters)</span></label>
                     <textarea
                         name="details"
                         value={formData.details}
                         onChange={handleChange}
                         maxLength={MAX_DETAILS_LENGTH}
                     />
-                    <p>{formData.details.length}/{MAX_DETAILS_LENGTH} characters</p>
                 </div>
-                <button type="submit">Add</button>
+                <button id='submit-btn' type="submit">Add</button>
             </form>
         </div>
     );

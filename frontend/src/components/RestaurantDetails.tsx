@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import './RestaurantDetails.css'
 
 interface Restaurant {
     name: string;
@@ -58,16 +59,40 @@ const RestaurantDetails: React.FC = () => {
         return <p>Loading...</p>;
     }
 
+    // Show the restaurant in Google Maps
+    const openInGoogleMaps = () => {
+        const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(restaurant.name)}`;
+        window.open(googleMapsUrl, '_blank');
+    };
+
+    const handleBackToHomepage = () => {
+        navigate('/');
+    };
+
     return (
         <div>
-            <h1>{restaurant.name}</h1>
-            <p>Category: {restaurant.category}</p>
-            <p>Address: {restaurant.address}</p>
-            <p>Phone: {restaurant.phone}</p>
-            {restaurant.photo && <img src={restaurant.photo} alt={restaurant.name} style={{ width: '300px' }} />}
-            {restaurant.details && <p>Details: {restaurant.details}</p>}
-            <button onClick={() => navigate(`/edit/${id}`)}>Edit Details</button>
-            <button onClick={handleDelete} style={{ color: 'red' }}>Delete Restaurant</button>
+            <button id='home-btn' onClick={handleBackToHomepage}>Go Back to Homepage</button>
+            {/* Restaurant Details card */}
+            <div id='restaurant-details'>
+                <h1>{restaurant.name}</h1>
+                <p><span className='bold'>Category:</span> <span className='italic'>{restaurant.category}</span></p>
+                {restaurant.photo && <img src={restaurant.photo} alt={restaurant.name} />}
+                <p>
+                    <span className='bold'>Address:</span> {restaurant.address}{' '}
+                    <button id='maps-btn' onClick={openInGoogleMaps}>
+                        Open in Google Maps
+                    </button>
+                </p>
+                <p id='tel'>
+                    <span className='bold'>Phone:</span> <a href={`tel:${restaurant.phone}`}>{restaurant.phone}</a>
+                </p>
+                {restaurant.details && <p><span className='bold'>Details:</span> {restaurant.details}</p>}
+                <div id='btns'>
+                    <button id='edit-btn' onClick={() => navigate(`/edit/${id}`)}>Edit Details</button>
+                    <button id='delete-btn' onClick={handleDelete}>Delete Restaurant</button>
+                </div>
+            </div>
+
         </div>
     );
 };
