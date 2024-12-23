@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './RestaurantForm.css';
 
-const MAX_NAME_LENGTH = 60;
-const MAX_CATEGORY_LENGTH = 30;
-const MAX_DETAILS_LENGTH = 1000;
+// Form to add a restaurant
+
+const MAX_NAME_LENGTH = 60; // name
+const MAX_CATEGORY_LENGTH = 30; // category
+const MAX_DETAILS_LENGTH = 1000; // details
 
 const RestaurantForm: React.FC = () => {
     const navigate = useNavigate();
@@ -33,6 +35,7 @@ const RestaurantForm: React.FC = () => {
         setFormData({ ...formData, [name]: value });
     };
 
+    // Simple phone number validation to ensure it includes country code
     const validatePhoneNumber = (phone: string) => {
         // Remove spaces
         const sanitizedPhone = phone.replace(/\s+/g, '');
@@ -50,6 +53,7 @@ const RestaurantForm: React.FC = () => {
             return;
         }
 
+        // use POST method to add the new restaurant
         try {
             const response = await fetch('http://localhost:5001/restaurants', {
                 method: 'POST',
@@ -75,6 +79,7 @@ const RestaurantForm: React.FC = () => {
 
     return (
         <div>
+            {/* Button to go back to the homepage */}
             <button id='home-btn' onClick={handleBackToHomepage}>Go Back to Homepage</button>
             <h1>Add a New Restaurant</h1>
             <form onSubmit={handleSubmit} id='restaurant-form'>

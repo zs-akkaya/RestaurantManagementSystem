@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './RestaurantForm.css';
 
+// Edit a restaurant page
+
 const EditRestaurant: React.FC = () => {
-    const { id } = useParams<{ id: string }>();
+    const { id } = useParams<{ id: string }>(); // To get the restaurant info
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: '',
@@ -15,6 +17,7 @@ const EditRestaurant: React.FC = () => {
     });
 
     useEffect(() => {
+        // Get restaurant details from /restaurants/id endpoint
         const fetchRestaurantDetails = async () => {
             try {
                 const response = await fetch(`http://localhost:5001/restaurants/${id}`);
@@ -37,6 +40,7 @@ const EditRestaurant: React.FC = () => {
         setFormData({ ...formData, [name]: value });
     };
 
+    // Update details by using PUT method on /restaurants/id endpoint
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -49,7 +53,7 @@ const EditRestaurant: React.FC = () => {
 
             if (response.ok) {
                 alert('Restaurant details updated successfully!');
-                navigate(`/details/${id}`); // Navigate back to the details page
+                navigate(`/details/${id}`); // Navigate back to the details page after update
             } else {
                 alert('Failed to update restaurant details');
             }
@@ -65,6 +69,7 @@ const EditRestaurant: React.FC = () => {
 
     return (
         <div>
+            {/* Button to go back to the details page */}
             <button id='details-btn' onClick={handleBackToDetailsPage}>Go Back to Details Page</button>
             <h1>Edit Restaurant Details</h1>
             <form onSubmit={handleSubmit} id='restaurant-form'>

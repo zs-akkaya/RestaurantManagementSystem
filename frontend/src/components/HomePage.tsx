@@ -9,6 +9,8 @@ interface Restaurant {
     photo?: string;
 }
 
+// Homepage to see all the restaurants together and search for a specific restaurant
+
 const HomePage: React.FC = () => {
     const navigate = useNavigate();
     const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
@@ -20,6 +22,7 @@ const HomePage: React.FC = () => {
     const handleAddRestaurant = () => navigate('/add');
     const handleViewDetails = (id: string) => navigate(`/details/${id}`);
 
+    // Get all restaurants OR Get restaurants with search query results
     const fetchRestaurants = async () => {
         try {
             const endpoint = searchQuery
@@ -41,6 +44,7 @@ const HomePage: React.FC = () => {
         fetchRestaurants();
     }, [searchQuery]);
 
+    // Get autocomplete suggestions from /autocomplete endpoint
     const fetchSuggestions = async (query: string) => {
         try {
             const response = await fetch(`http://localhost:5001/autocomplete?query=${query}`);
@@ -92,18 +96,34 @@ const HomePage: React.FC = () => {
         }
     };
 
+    // When click a autocomplete suggestion
     const handleSuggestionClick = (suggestion: string) => {
         setSearchQuery(suggestion);
         setShowSuggestions(false);
     };
 
+    const [showWelcomeText, setShowWelcomeText] = useState<boolean>(true); // Control welcome text visibility
+
     return (
         <div>
+            {/* Button for adding a new restaurant */}
             <button id="add-btn" onClick={handleAddRestaurant}>
                 Add a New Restaurant
             </button>
+
             <h1>Welcome to the Restaurant Management System!</h1>
 
+            {showWelcomeText && (
+                <div id="welcome-banner">
+                    <p>
+                        Welcome to the Restaurant Management System!<br></br>
+                        Start by adding a new restaurant using the button at the top-right. You can edit or delete restaurants afterward. Click on a restaurant card to view its details. You can also filter and search restaurants by their names or categories.
+                    </p>
+                    <button onClick={() => setShowWelcomeText(false)}>X</button>
+                </div>
+            )}
+
+            {/* Search a restaurant input */}
             <input
                 id="search-input"
                 type="text"
@@ -115,6 +135,7 @@ const HomePage: React.FC = () => {
                 onFocus={() => setShowSuggestions(true)}
             />
 
+            {/* Autocomplete suggestions */}
             {showSuggestions && suggestions.length > 0 && (
                 <ul id="autocomplete-dropdown">
                     {suggestions.map((suggestion, index) => (
@@ -129,6 +150,7 @@ const HomePage: React.FC = () => {
                 </ul>
             )}
 
+            {/* Get restaurants */}
             {restaurants.length > 0 ? (
                 <ul id="restaurant-cards">
                     {restaurants.map((restaurant) => (

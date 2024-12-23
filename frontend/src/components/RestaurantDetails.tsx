@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './RestaurantDetails.css'
 
+// Single restaurant details page
+
 interface Restaurant {
     name: string;
     category: string;
@@ -17,6 +19,7 @@ const RestaurantDetails: React.FC = () => {
     const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
 
     useEffect(() => {
+        // Get single restaurant details from /restaurants/id endpoint
         const fetchRestaurantDetails = async () => {
             try {
                 const response = await fetch(`http://localhost:5001/restaurants/${id}`);
@@ -34,6 +37,7 @@ const RestaurantDetails: React.FC = () => {
         fetchRestaurantDetails();
     }, [id]);
 
+    // Delete a restaurant
     const handleDelete = async () => {
         const confirmDelete = window.confirm('Are you sure you want to delete this restaurant?');
         if (confirmDelete) {
@@ -71,6 +75,7 @@ const RestaurantDetails: React.FC = () => {
 
     return (
         <div>
+            {/* Button to go back to the homepage */}
             <button id='home-btn' onClick={handleBackToHomepage}>Go Back to Homepage</button>
             {/* Restaurant Details card */}
             <div id='restaurant-details'>
