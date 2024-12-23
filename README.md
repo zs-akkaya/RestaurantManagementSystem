@@ -55,7 +55,7 @@ Ensure the following software is installed:
 
    - Ensure Elasticsearch is running on `localhost:9200`.
    - Ensure MongoDB is running on `localhost:27017`.
-   - Do not forget to change `backend/server.js` line 20 with your own password.
+   - Do not forget to change `backend/server.js` line 20 with your own password for your Elasticsearch connection.
   
 4. **Run the Backend Server**:
 
