@@ -17,7 +17,7 @@ const esClient = new Client({
     node: 'https://localhost:9200/',
     auth: {
         username: 'elastic',
-        password: '64u90_yqHPxRxrMNn9Ls',
+        password: '', // Please ensure that you fill this part with your own password
     },
     tls: {
         rejectUnauthorized: false,
