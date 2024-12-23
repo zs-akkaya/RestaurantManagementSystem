@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 const { Client } = require('@elastic/elasticsearch');
 
 const esClient = new Client({
-    node: 'https://192.168.0.10:9200',
+    node: 'https://localhost:9200/',
     auth: {
         username: 'elastic',
         password: '64u90_yqHPxRxrMNn9Ls',
@@ -38,26 +38,31 @@ mongoose.connect('mongodb://localhost:27017/restaurantDB', {
 
 // Create Elasticsearch Restaurant index if it does not exist
 const createIndexIfNotExists = async () => {
-    const indexExists = await esClient.indices.exists({ index: 'restaurants' });
-    console.log('Restaurant index already exists.');
+    try {
+        const indexExists = await esClient.indices.exists({ index: 'restaurants' });
 
-    if (!indexExists) {
-        await esClient.indices.create({
-            index: 'restaurants',
-            body: {
-                mappings: {
-                    properties: {
-                        name: { type: 'text' },
-                        category: { type: 'text' },
-                        address: { type: 'text' },
-                        phone: { type: 'text' },
-                        photo: { type: 'text' },
-                        details: { type: 'text' },
+        if (indexExists) {
+            console.log('Restaurant index already exists.');
+        } else {
+            await esClient.indices.create({
+                index: 'restaurants',
+                body: {
+                    mappings: {
+                        properties: {
+                            name: { type: 'text' },
+                            category: { type: 'text' },
+                            address: { type: 'text' },
+                            phone: { type: 'text' },
+                            photo: { type: 'text' },
+                            details: { type: 'text' },
+                        },
                     },
                 },
-            },
-        });
-        console.log('Restaurants index created');
+            });
+            console.log('Restaurants index created.');
+        }
+    } catch (error) {
+        console.error('Error checking or creating index:', error.message);
     }
 };
 
@@ -78,18 +83,16 @@ app.get('/search', async (req, res) => {
                     bool: {
                         should: [
                             {
-                                match: {
+                                prefix: {
                                     name: {
-                                        query,
-                                        fuzziness: 'AUTO',
+                                        value: query,
                                     },
                                 },
                             },
                             {
-                                match: {
+                                prefix: {
                                     category: {
-                                        query,
-                                        fuzziness: 'AUTO',
+                                        value: query,
                                     },
                                 },
                             },
