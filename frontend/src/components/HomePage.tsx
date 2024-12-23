@@ -12,22 +12,19 @@ interface Restaurant {
 const HomePage: React.FC = () => {
     const navigate = useNavigate();
     const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
-    const [searchQuery, setSearchQuery] = useState<string>(''); // Search query for Elasticsearch
-    const [showWelcomeText, setShowWelcomeText] = useState<boolean>(true); // Control welcome text visibility
+    const [searchQuery, setSearchQuery] = useState<string>('');
+    const [suggestions, setSuggestions] = useState<string[]>([]);
+    const [activeSuggestionIndex, setActiveSuggestionIndex] = useState<number>(-1); // Highlighted autocomplete suggestion
+    const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
 
-    const handleAddRestaurant = () => {
-        navigate('/add');
-    };
-
-    const handleViewDetails = (id: string) => {
-        navigate(`/details/${id}`);
-    };
+    const handleAddRestaurant = () => navigate('/add');
+    const handleViewDetails = (id: string) => navigate(`/details/${id}`);
 
     const fetchRestaurants = async () => {
         try {
             const endpoint = searchQuery
-                ? `http://localhost:5001/search?query=${searchQuery}` // Use searchQuery if exists
-                : 'http://localhost:5001/restaurants'; // Fetch all restaurants if no search query
+                ? `http://localhost:5001/search?query=${searchQuery}`
+                : 'http://localhost:5001/restaurants';
             const response = await fetch(endpoint);
             if (response.ok) {
                 const data = await response.json();
@@ -60,8 +57,6 @@ const HomePage: React.FC = () => {
         }
     };
 
-    const [suggestions, setSuggestions] = useState<string[]>([]);
-
     const handleSearchChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         setSearchQuery(value);
@@ -69,9 +64,37 @@ const HomePage: React.FC = () => {
         if (value.trim()) {
             const fetchedSuggestions = await fetchSuggestions(value);
             setSuggestions(fetchedSuggestions);
+            setShowSuggestions(true);
+            setActiveSuggestionIndex(-1); // Reset active index
         } else {
             setSuggestions([]);
+            setShowSuggestions(false);
         }
+    };
+
+    // Manually make autocomplete suggestions as dropdown list
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'ArrowDown') {
+            setActiveSuggestionIndex((prevIndex) =>
+                Math.min(prevIndex + 1, suggestions.length - 1)
+            );
+        } else if (event.key === 'ArrowUp') {
+            setActiveSuggestionIndex((prevIndex) =>
+                Math.max(prevIndex - 1, 0)
+            );
+        } else if (event.key === 'Enter') {
+            if (activeSuggestionIndex >= 0 && activeSuggestionIndex < suggestions.length) {
+                setSearchQuery(suggestions[activeSuggestionIndex]);
+                setShowSuggestions(false);
+            }
+        } else if (event.key === 'Escape') {
+            setShowSuggestions(false);
+        }
+    };
+
+    const handleSuggestionClick = (suggestion: string) => {
+        setSearchQuery(suggestion);
+        setShowSuggestions(false);
     };
 
     return (
@@ -81,30 +104,25 @@ const HomePage: React.FC = () => {
             </button>
             <h1>Welcome to the Restaurant Management System!</h1>
 
-            {showWelcomeText && (
-                <div id="welcome-banner">
-                    <p>
-                        Welcome to the Restaurant Management System!<br></br>
-                        Start by adding a new restaurant using the button at the top-right. You can edit or delete restaurants afterward. Click on a restaurant card to view its details. You can also filter and search restaurants by their names or categories.
-                    </p>
-                    <button onClick={() => setShowWelcomeText(false)}>X</button>
-                </div>
-            )}
-
-            {/* Search restaurants */}
             <input
                 id="search-input"
                 type="text"
                 placeholder="Search restaurants by name or category"
                 value={searchQuery}
                 onChange={handleSearchChange}
+                onKeyDown={handleKeyDown}
+                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                onFocus={() => setShowSuggestions(true)}
             />
 
-            {/* Autocomplete suggestions */}
-            {suggestions.length > 0 && (
-                <ul>
+            {showSuggestions && suggestions.length > 0 && (
+                <ul id="autocomplete-dropdown">
                     {suggestions.map((suggestion, index) => (
-                        <li key={index} onClick={() => setSearchQuery(suggestion)}>
+                        <li
+                            key={index}
+                            className={index === activeSuggestionIndex ? 'active' : ''}
+                            onClick={() => handleSuggestionClick(suggestion)}
+                        >
                             {suggestion}
                         </li>
                     ))}
@@ -114,7 +132,11 @@ const HomePage: React.FC = () => {
             {restaurants.length > 0 ? (
                 <ul id="restaurant-cards">
                     {restaurants.map((restaurant) => (
-                        <div id="restaurant-card" onClick={() => handleViewDetails(restaurant._id)} key={restaurant._id}>
+                        <div
+                            id="restaurant-card"
+                            onClick={() => handleViewDetails(restaurant._id)}
+                            key={restaurant._id}
+                        >
                             <li>
                                 <h3>{restaurant.name}</h3>
                                 <p>{restaurant.category}</p>
@@ -130,7 +152,7 @@ const HomePage: React.FC = () => {
                     ))}
                 </ul>
             ) : (
-                <p id='no-restaurants'>No restaurants available. Click to top-right to start.</p>
+                <p id="no-restaurants">No restaurants available. Click to top-right to start.</p>
             )}
         </div>
     );

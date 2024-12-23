@@ -69,6 +69,34 @@ h1 {
     height: 30px;
 }
 
+#autocomplete-dropdown {
+    border: 1px solid #ccc;
+    background: white;
+    width: 50%;
+    max-width: 500px;
+    max-height: 150px;
+    list-style: none;
+    padding: 0;
+    margin: -26px auto 0;
+    text-align: center;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+#autocomplete-dropdown li {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    cursor: pointer;
+}
+
+#autocomplete-dropdown li.active {
+    background: #f0f0f0;
+}
+
+#autocomplete-dropdown li:hover {
+    background: #e0e0e0;
+}
+
 #restaurant-cards {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
