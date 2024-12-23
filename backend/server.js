@@ -41,9 +41,7 @@ const createIndexIfNotExists = async () => {
     try {
         const indexExists = await esClient.indices.exists({ index: 'restaurants' });
 
-        if (indexExists) {
-            console.log('Restaurant index already exists.');
-        } else {
+        if (!indexExists) {
             await esClient.indices.create({
                 index: 'restaurants',
                 body: {
@@ -55,6 +53,7 @@ const createIndexIfNotExists = async () => {
                             phone: { type: 'text' },
                             photo: { type: 'text' },
                             details: { type: 'text' },
+                            autocomplete: { type: 'completion' }, // autocomplete field on index
                         },
                     },
                 },
@@ -71,6 +70,33 @@ createIndexIfNotExists();
 // Import Restaurant Model
 const Restaurant = require('./models/Restaurant');
 
+// Autocomplete for searching a restaurant field
+app.get('/autocomplete', async (req, res) => {
+    const { query } = req.query;
+
+    try {
+        const result = await esClient.search({
+            index: 'restaurants',
+            body: {
+                suggest: {
+                    restaurant_suggest: {
+                        prefix: query,
+                        completion: {
+                            field: 'autocomplete',
+                            size: 5,
+                        },
+                    },
+                },
+            },
+        });
+
+        const suggestions = result.suggest.restaurant_suggest[0].options.map(option => option.text);
+        res.json(suggestions);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 // Search restaurants by name or category using Elasticsearch
 app.get('/search', async (req, res) => {
     const { query } = req.query;
@@ -83,16 +109,16 @@ app.get('/search', async (req, res) => {
                     bool: {
                         should: [
                             {
-                                prefix: {
+                                match_phrase_prefix: {
                                     name: {
-                                        value: query,
+                                        query: query,
                                     },
                                 },
                             },
                             {
-                                prefix: {
+                                match_phrase_prefix: {
                                     category: {
-                                        value: query,
+                                        query: query,
                                     },
                                 },
                             },
@@ -110,6 +136,7 @@ app.get('/search', async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+
 
 // Endpoints
 // GET, POST, PUT, DELETE with Elasticsearch indexing
@@ -152,7 +179,10 @@ app.post('/restaurants', async (req, res) => {
             await esClient.index({
                 index: 'restaurants',
                 id: savedRestaurant._id.toString(),
-                document: restaurantData,
+                document: {
+                    ...restaurantData,
+                    autocomplete: [restaurantData.name, restaurantData.category], // for autocomplete functionality
+                },
             });
 
             console.log('Restaurant indexed in Elasticsearch:', savedRestaurant._id);

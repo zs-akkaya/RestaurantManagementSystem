@@ -13,6 +13,14 @@ const HomePage: React.FC = () => {
     const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>(''); // Search query for Elasticsearch
 
+    const handleAddRestaurant = () => {
+        navigate('/add');
+    };
+
+    const handleViewDetails = (id: string) => {
+        navigate(`/details/${id}`);
+    };
+
     // Fetch all the restaurants
     const fetchRestaurants = async () => {
         try {
@@ -36,16 +44,36 @@ const HomePage: React.FC = () => {
         fetchRestaurants();
     }, [searchQuery]);
 
-    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchQuery(event.target.value);
+    // Autocomplete suggestions when searching for a restaurant
+    const fetchSuggestions = async (query: string) => {
+        try {
+            const response = await fetch(`http://localhost:5001/autocomplete?query=${query}`);
+            if (response.ok) {
+                const data = await response.json();
+                return data;
+            } else {
+                console.error('Failed to fetch autocomplete suggestions');
+                return [];
+            }
+        } catch (error) {
+            console.error('Error fetching autocomplete suggestions:', error);
+            return [];
+        }
     };
 
-    const handleAddRestaurant = () => {
-        navigate('/add');
-    };
+    // Searching for a restaurant by name or category
+    const [suggestions, setSuggestions] = useState<string[]>([]);
 
-    const handleViewDetails = (id: string) => {
-        navigate(`/details/${id}`);
+    const handleSearchChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        setSearchQuery(value);
+
+        if (value.trim()) {
+            const fetchedSuggestions = await fetchSuggestions(value);
+            setSuggestions(fetchedSuggestions);
+        } else {
+            setSuggestions([]);
+        }
     };
 
     return (
@@ -59,6 +87,17 @@ const HomePage: React.FC = () => {
                 value={searchQuery}
                 onChange={handleSearchChange}
             />
+            {/* Autocomplete suggestions */}
+            {suggestions.length > 0 && (
+                <ul>
+                    {suggestions.map((suggestion, index) => (
+                        <li key={index} onClick={() => setSearchQuery(suggestion)}>
+                            {suggestion}
+                        </li>
+                    ))}
+                </ul>
+            )}
+
             {restaurants.length > 0 ? (
                 <ul>
                     {restaurants.map((restaurant) => (
