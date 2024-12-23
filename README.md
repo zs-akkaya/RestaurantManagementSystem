@@ -19,6 +19,14 @@ A full-stack Restaurant Management System designed by using React.js, Node.js, M
 
 ### Steps to Run the Project
 
+### Prerequisites
+
+Ensure the following software is installed:
+
+- Node.js
+- MongoDB
+- Elasticsearch
+
 1. **Clone the Repository & Change Directory**:
 
    ```bash
@@ -70,6 +78,7 @@ A full-stack Restaurant Management System designed by using React.js, Node.js, M
    cd frontend
    npm start
    ```
+   Access the application at `http://localhost:3000/`
 
    You should see the page:
 
