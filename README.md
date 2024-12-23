@@ -45,7 +45,7 @@ A full-stack Restaurant Management System designed by using React.js, Node.js, M
 
 3. **Configure `backend/server.js` file**:
 
-   - Ensure Elasticsearch is running on `localhost:9200/`.
+   - Ensure Elasticsearch is running on `localhost:9200`.
    - Ensure MongoDB is running on `localhost:27017`.
    - Do not forget to change `backend/server.js` line 20 with your own password.
   
@@ -70,3 +70,27 @@ A full-stack Restaurant Management System designed by using React.js, Node.js, M
    cd frontend
    npm start
    ```
+
+   You should see the page:
+
+   <img src="https://raw.githubusercontent.com/zs-akkaya/RestaurantManagementSystem/refs/heads/main/Screenshots/1.png" width="500px">
+
+   ---
+
+   Add restaurants by clicking the button on top-right. After adding restaurants you can see them on the homepage:
+   
+   <img src="https://raw.githubusercontent.com/zs-akkaya/RestaurantManagementSystem/refs/heads/main/Screenshots/2.png" width="500px">
+
+   ---
+
+   Dynamically search for restaurants by their name or category:
+   
+   <img src="https://raw.githubusercontent.com/zs-akkaya/RestaurantManagementSystem/refs/heads/main/Screenshots/autocomplete.gif" width="500px">
+
+   ---
+
+   You can see the details of a restaurant page & edit the details or delete the restaurant:
+   
+   <img src="https://raw.githubusercontent.com/zs-akkaya/RestaurantManagementSystem/refs/heads/main/Screenshots/3.png" width="500px">
+
+   ---
