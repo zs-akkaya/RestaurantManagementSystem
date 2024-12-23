@@ -73,24 +73,24 @@ A full-stack Restaurant Management System designed by using React.js, Node.js, M
 
    You should see the page:
 
-   <img src="https://raw.githubusercontent.com/zs-akkaya/RestaurantManagementSystem/refs/heads/main/Screenshots/1.png" width="500px">
+   <img src="https://raw.githubusercontent.com/zs-akkaya/RestaurantManagementSystem/refs/heads/main/Screenshots/1.png" width="800px">
 
    ---
 
    Add restaurants by clicking the button on top-right. After adding restaurants you can see them on the homepage:
    
-   <img src="https://raw.githubusercontent.com/zs-akkaya/RestaurantManagementSystem/refs/heads/main/Screenshots/2.png" width="500px">
+   <img src="https://raw.githubusercontent.com/zs-akkaya/RestaurantManagementSystem/refs/heads/main/Screenshots/2.png" width="800px">
 
    ---
 
-   Dynamically search for restaurants by their name or category:
+   Dynamically search for restaurants by their name or category. You can use autocomplete feature and easily select the one you want by using arrow keys:
    
-   <img src="https://raw.githubusercontent.com/zs-akkaya/RestaurantManagementSystem/refs/heads/main/Screenshots/autocomplete.gif" width="500px">
+   <img src="https://raw.githubusercontent.com/zs-akkaya/RestaurantManagementSystem/refs/heads/main/Screenshots/autocomplete.gif" width="800px">
 
    ---
 
-   You can see the details of a restaurant page & edit the details or delete the restaurant:
+   You can see the details of a restaurant page & edit the details or delete the restaurant. You can directly call the restaurant or see the location on Google Maps:
    
-   <img src="https://raw.githubusercontent.com/zs-akkaya/RestaurantManagementSystem/refs/heads/main/Screenshots/3.png" width="500px">
+   <img src="https://raw.githubusercontent.com/zs-akkaya/RestaurantManagementSystem/refs/heads/main/Screenshots/3.png" width="800px">
 
    ---
