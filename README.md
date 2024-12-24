@@ -1,6 +1,6 @@
 # Restaurant Management System
 
-A full-stack Restaurant Management System designed by using React.js, Node.js, MongoDB and Elasticsearch
+A full-stack Restaurant Management System designed by using React.js, Node.js, MongoDB and Elasticsearch. This application allows users to manage restaurant data, offering functionalities like CRUD operations and searching capabilities.
 
 ## Features
 
