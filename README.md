@@ -5,12 +5,12 @@ A full-stack Restaurant Management System designed by using React.js, Node.js, M
 ## Features
 
 - **Restaurant Management**: Add, update and delete restaurants and view their details such as name, category, address, phone, photo, and details.
-- **Search Functionality**: Leverage Elasticsearch to perform searches by restaurant name or category.
+- **Search Functionality and Autocomplete**: Leverage Elasticsearch to perform searches by restaurant name or category with the autocomplete functionality.
 - **Real-Time Indexing**: Automatically index restaurant data in Elasticsearch when created, updated, or deleted in MongoDB.
 
 ## Technologies Used
 
-- **Frontend**: React.js
+- **Frontend**: React.js with TypeScript
 - **Backend**: Node.js with Express.js
 - **Database**: MongoDB
 - **Search Engine**: Elasticsearch
